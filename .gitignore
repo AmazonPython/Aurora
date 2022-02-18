@@ -1,8 +1,15 @@
 /node_modules
 /public/hot
 /public/storage
+/public/.DS_Store
+/public/packages/summerblue/administrator/.DS_Store
+/public/uploads/.DS_Store
+/public/uploads/images/.DS_Store
+/resources/.DS_Store
+/resources/editor/.DS_Store
 /storage/*.key
 /vendor
+.DS_Store
 .env
 .env.backup
 .phpunit.result.cache
