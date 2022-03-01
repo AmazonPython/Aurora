@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use _PHPStan_76800bfb5\JsonException;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Link::observe(\App\Observers\LinkObserver::class);
 
         \Illuminate\Pagination\Paginator::useBootstrap();
+
+        // 只有在 debug 模式下才会打印日志
+        JsonResource::withoutWrapping();
     }
 }
