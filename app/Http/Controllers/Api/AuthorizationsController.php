@@ -29,7 +29,7 @@ class AuthorizationsController extends Controller
             throw new AuthenticationException('参数错误，未获取用户信息');
         }
 
-        if (!$oauthUser->getId()) {
+        if (! $oauthUser->getId()) {
             throw new AuthenticationException('参数错误，未获取用户信息');
         }
 
@@ -44,7 +44,7 @@ class AuthorizationsController extends Controller
                 }
 
                 // 没有用户，默认创建一个用户
-                if (!$user) {
+                if (! $user) {
                     $user = User::create([
                         'name' => $oauthUser->getNickname(),
                         'avatar' => $oauthUser->getAvatar(),
