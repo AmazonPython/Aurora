@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Api\AuthorizationRequest;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -10,6 +11,15 @@ use App\Http\Requests\Api\SocialAuthorizationRequest;
 
 class AuthorizationsController extends Controller
 {
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60
+        ]);
+    }
+
     public function socialStore($type, SocialAuthorizationRequest $request)
     {
         $driver = \Socialite::create($type);
@@ -29,7 +39,7 @@ class AuthorizationsController extends Controller
             throw new AuthenticationException('参数错误，未获取用户信息');
         }
 
-        if (! $oauthUser->getId()) {
+        if (!$oauthUser->getId()) {
             throw new AuthenticationException('参数错误，未获取用户信息');
         }
 
@@ -44,7 +54,7 @@ class AuthorizationsController extends Controller
                 }
 
                 // 没有用户，默认创建一个用户
-                if (! $user) {
+                if (!$user) {
                     $user = User::create([
                         'name' => $oauthUser->getNickname(),
                         'avatar' => $oauthUser->getAvatar(),
@@ -57,5 +67,34 @@ class AuthorizationsController extends Controller
         }
 
         return response()->json(['token' => $user->id]);
+    }
+
+    public function store(AuthorizationRequest $request)
+    {
+        $username = $request->username;
+
+        filter_var($username, FILTER_VALIDATE_EMAIL) ?
+            $credentials['email'] = $username :
+            $credentials['phone'] = $username;
+
+        $credentials['password'] = $request->password;
+
+        if (!$token = \Auth::guard('api')->attempt($credentials)) {
+            throw new AuthenticationException('用户名或密码错误');
+        }
+
+        return $this->respondWithToken($token)->setStatusCode(201);
+    }
+
+    public function update()
+    {
+        $token = auth('api')->refresh();
+        return $this->respondWithToken($token);
+    }
+
+    public function destroy()
+    {
+        auth('api')->logout();
+        return response(null, 204);
     }
 }
