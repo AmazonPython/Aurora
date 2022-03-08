@@ -60,6 +60,14 @@ Route::prefix('v1')->namespace('Api')->name('api.v1.')->group(function () {
 
             // 上传图片
             Route::post('images', 'ImagesController@store')->name('images.store');
+
+            // 某个用户的详情
+            Route::get('users/{user}/', 'UsersController@show')->name('users.show');
+
+            // 分类列表
+            Route::get('categories', 'CategoriesController@index')->name('categories.index');
+
+
         });
     });
 });
