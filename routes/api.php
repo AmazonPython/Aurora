@@ -53,6 +53,9 @@ Route::prefix('v1')->namespace('Api')->name('api.v1.')->group(function () {
         // 分类列表
         Route::get('categories', 'CategoriesController@index')->name('categories.index');
 
+        // 话题列表
+        Route::resource('topics', 'TopicsController')->only('index', 'show');
+
         // 登录后可以访问的接口
         Route::middleware('auth:api')->group(function () {
             // 当前登录用户信息
@@ -63,6 +66,9 @@ Route::prefix('v1')->namespace('Api')->name('api.v1.')->group(function () {
 
             // 上传图片
             Route::post('images', 'ImagesController@store')->name('images.store');
+
+            // 发布话题
+            Route::resource('topics', 'TopicsController')->only(['store', 'update', 'destroy']);
         });
     });
 });
