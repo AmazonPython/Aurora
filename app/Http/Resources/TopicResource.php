@@ -18,15 +18,18 @@ class TopicResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
-            'category_id' => (int)$this->category->id,
-            'user_id' => (int)$this->user->id,
+            'category_id' => (int)$this->category_id,
+            'user_id' => (int)$this->user_id,
             'reply_count' => (int)$this->reply_count,
             'view_count' => (int)$this->view_count,
-            'last_reply_user_id' => (int)$this->last_reply_user->id,
+            'last_reply_user_id' => (int)$this->last_reply_user_id,
+            'order' => (int)$this->order,
             'excerpt' => $this->excerpt,
             'slug' => $this->slug,
-            'created_at' => (string)$this->created_at->diffForHumans(),
-            'updated_at' => (string)$this->updated_at->diffForHumans(),
+            'created_at' => (string) $this->created_at,
+            'updated_at' => (string) $this->updated_at,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'category' => new CategoryResource($this->whenLoaded('category')),
         ];
     }
 }
