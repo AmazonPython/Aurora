@@ -10,6 +10,9 @@ class CategoriesController extends Controller
 {
     public function index()
     {
-        return CategoryResource::collection(Category::paginate());
+        // 获取所有分类
+        CategoryResource::wrap('data');
+
+        return CategoryResource::collection(Category::all());
     }
 }
