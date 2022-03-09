@@ -2,13 +2,44 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use App\Http\Resources\TopicResource;
 use App\Http\Requests\Api\TopicRequest;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class TopicsController extends Controller
 {
+    public function userIndex(User $user, Request $request)
+    {
+        $query = $user->topics()->getQuery();
+
+        $topics = QueryBuilder::for($query)
+            ->allowedIncludes(['user', 'category'])
+            ->allowedFilters([
+                'title',
+                AllowedFilter::exact('category_id'),
+                AllowedFilter::scope('withOrder')->default('recentReplied'),
+            ])->paginate();
+
+        return TopicResource::collection($topics);
+    }
+
+    public function index(Request $request, Topic $topic)
+    {
+        $topics = QueryBuilder::for(Topic::class)
+            ->allowedIncludes('user', 'category')
+            ->allowedFilters([
+                'title',
+                AllowedFilter::exact('category_id'),
+                AllowedFilter::scope('withOrder')->default('recentReplied'),
+            ])->paginate();
+
+        return TopicResource::collection($topics);
+    }
+
     public function store(TopicRequest $request, Topic $topic)
     {
         $topic->fill($request->all());
