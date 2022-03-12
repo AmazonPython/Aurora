@@ -85,6 +85,9 @@ Route::prefix('v1')->namespace('Api')->name('api.v1.')->group(function () {
             // 删除回复
             Route::delete('topics/{topic}/replies/{reply}', 'RepliesController@destroy')->name('topics.replies.destroy');
 
+            // 通知列表
+            Route::get('notifications', 'NotificationsController@index')->name('notifications.index');
+
         });
     });
 });
