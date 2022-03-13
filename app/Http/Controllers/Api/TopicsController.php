@@ -35,7 +35,7 @@ class TopicsController extends Controller
     public function store(TopicRequest $request, Topic $topic)
     {
         $topic->fill($request->all());
-        $topic->user_id = $this->user()->id;
+        $topic->user_id = $request->user()->id;
         $topic->save();
 
         return new TopicResource($topic);
