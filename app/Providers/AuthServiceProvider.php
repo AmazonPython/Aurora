@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -37,5 +38,14 @@ class AuthServiceProvider extends ServiceProvider
             // 是否是站长
             return \Auth::user()->hasRole('Founder');
         });
+
+        // 授权注册
+        Passport::routes();
+
+        // access_token过期时间
+        Passport::tokensExpireIn(now()->addDays(15));
+
+        // refresh_token过期时间
+        Passport::refreshTokensExpireIn(now()->addDays(30));
     }
 }
